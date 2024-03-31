@@ -3,7 +3,7 @@ package ayds.songinfo.home.view
 import ayds.songinfo.home.model.entities.Song.EmptySong
 import ayds.songinfo.home.model.entities.Song
 import ayds.songinfo.home.model.entities.Song.SpotifySong
-
+import ayds.songinfo.home.view.SongDateHelper
 interface SongDescriptionHelper {
     fun getSongDescriptionText(song: Song = EmptySong): String
 }
@@ -18,7 +18,7 @@ internal class SongDescriptionHelperImpl : SongDescriptionHelper {
                 }\n" +
                         "Artist: ${song.artistName}\n" +
                         "Album: ${song.albumName}\n" +
-                        "Release date: TODO"/*${song.year}*/
+                        "Release date: ${SongDateHelperImp().PrecisionDateTOREaleseDate(song.releaseDate, song.releaseDatePrecision)}"
             else -> "Song not found"
         }
     }
