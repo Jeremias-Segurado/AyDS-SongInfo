@@ -1,29 +1,31 @@
 package ayds.songinfo.home.view
+import ayds.songinfo.home.model.entities.Song
 
-interface SongDateHelper{
-    fun PrecisionDateTOREaleseDate(date: String, precisionDate: String): String
+//----------Factory-------
+//Se usaria en el INYECTOR para mantener dependencias y no se que factor SOLID
+interface SongDataHelperFactory{
+    fun getSongDataHelper(song: Song.SpotifySong): SongDateHelper
 }
-internal class SongDateHelperImp(): SongDateHelper{
-   override fun PrecisionDateTOREaleseDate(date: String, precisionDate: String): String =
-
-        when (precisionDate) {
-            "day" -> PrecisionDAY(date)
-            "month" -> PrecisionMONTH(date)
-            else -> PrecisionYEAR(date)
+class SongDataHelperFactoryImpl: SongDataHelperFactory{
+    override fun getSongDataHelper(song: Song.SpotifySong): SongDateHelper =
+        when (song.releaseDatePrecision) {
+            "day" -> SongDataDayHelper(song)
+            "month" -> SongDataMonthHelper(song)
+            else -> SongDataYearHelper(song)
         }
 
+}
+//------------------------
+interface SongDateHelper{
+    val song: Song.SpotifySong
+    fun getPrecisionDate(): String
+    
+}
 
-    private fun PrecisionDAY(date: String): String {
+internal class SongDataMonthHelper(override val song: Song.SpotifySong):SongDateHelper{
+    override fun getPrecisionDate(): String {
         var toReturn: String = ""
-        toReturn +=  date.slice(listOf(8, 9))
-        toReturn += "/" + date.slice(listOf(5, 6))
-        toReturn += "/" + date.slice(listOf(0, 1, 2, 3))
-        return toReturn
-    }
-
-
-    private fun PrecisionMONTH(date: String): String {
-        var toReturn: String = ""
+        val date = song.releaseDate
         val monthAux = date.slice(listOf(5, 6))
         when (monthAux) {
             "01" -> toReturn += "January "
@@ -42,9 +44,22 @@ internal class SongDateHelperImp(): SongDateHelper{
         toReturn += ", " + date.slice(listOf(0, 1, 2, 3))
         return toReturn
     }
+}
 
-    private fun PrecisionYEAR(date: String): String {
+internal class SongDataDayHelper(override val song: Song.SpotifySong):SongDateHelper{
+    override fun getPrecisionDate(): String {
         var toReturn: String = ""
+        val date = song.releaseDate
+        toReturn +=  date.slice(listOf(8, 9))
+        toReturn += "/" + date.slice(listOf(5, 6))
+        toReturn += "/" + date.slice(listOf(0, 1, 2, 3))
+        return toReturn
+    }
+}
+internal class SongDataYearHelper(override val song: Song.SpotifySong):SongDateHelper{
+    override fun getPrecisionDate(): String {
+        var toReturn: String = ""
+        val date = song.releaseDate
         val yearAux = date.slice(listOf(0, 1, 2, 3))
         toReturn += yearAux
         if (yearAux.toInt() % 4 == 0)
