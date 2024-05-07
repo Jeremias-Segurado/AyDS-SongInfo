@@ -1,3 +1,4 @@
+
 package ayds.songinfo.moredetails.data.external
 
 import ayds.songinfo.moredetails.domain.Entity.Biography
@@ -41,3 +42,4 @@ internal class externalBiographyRepository_Imp(private val lastFMAPI: LastFMAPI)
         lastFMAPI.getArtistInfo(artistName).execute()
 
 }
+
