@@ -7,7 +7,7 @@ sealed class Biography{
         val artistName: String,
         val biography: String,
         val articleUrl: String
-    ) : Biography() {  }
-    //Esto va aca?????????
-    private fun ArtistBiography.markItAsLocal() = copy(biography = "[*]$biography")
+    ) : Biography() {
+
+    }
 }

@@ -1,12 +1,17 @@
 package ayds.songinfo.moredetails.presentation
 
-/*
+
+interface moreDetailsPresenter{
+
+}
+
+class moreDetailsPresenter_imp():moreDetailsPresenter {
+
+}
 private const val ARTICLE_BD_NAME = "database-article"
 private const val LASTFM_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
 private const val LASTFM_IMAGE_URL =
     "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
-
-
 
 private lateinit var articleTextView: TextView
 private lateinit var openUrlButton: Button
@@ -62,4 +67,3 @@ private fun getArtistInfo() {
         const val ARTIST_NAME_EXTRA = "artistName"
     }
 
- */

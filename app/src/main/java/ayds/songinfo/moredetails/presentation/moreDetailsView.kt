@@ -5,9 +5,10 @@ import android.net.Uri
 import ayds.songinfo.moredetails.fulllogic.LASTFM_IMAGE_URL
 import com.squareup.picasso.Picasso
 
-/*
- //EN VIEW????
-    private fun getArtistName() =
+interface
+
+
+private fun getArtistName() =
         intent.getStringExtra(ARTIST_NAME_EXTRA) ?: throw Exception("Missing artist name")
 
 private fun updateUi(artistBiography: ArtistBiography) {
@@ -54,4 +55,3 @@ private fun updateArticleText(artistBiography: ArtistBiography) {
         builder.append("</font></div></html>")
         return builder.toString()
     }
-*/

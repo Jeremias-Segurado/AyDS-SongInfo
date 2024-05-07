@@ -1,31 +1,30 @@
 package ayds.songinfo.moredetails.data
+
 import ayds.songinfo.moredetails.data.external.externalBiographyRepository
 import ayds.songinfo.moredetails.data.local.localBiographyRepository
 import ayds.songinfo.moredetails.domain.BiographyRepository
 import ayds.songinfo.moredetails.domain.Entity.Biography
 
-
 internal class BiographyRepositoryImpl(
-    private val BiographyLocalStorage: externalBiographyRepository,
-    private val BiographyExternalService: localBiographyRepository
+    private val biographyLocalStorage:  localBiographyRepository,
+    private val biographyExternalService:externalBiographyRepository
 ) : BiographyRepository {
 
-    private fun getArtistInfoFromRepository(): Biography {
-        val artistName = getArtistName()
+    override fun getArtistInfoFromRepository(artistName: String): Biography {
 
-        val dbArticle = getArticleFromDB(artistName)
-
-        val artistBiography: ArtistBiography
+        val dbArticle = biographyLocalStorage.getArticleFromDB(artistName)
+        val artistBiography: Biography.ArtistBiography
 
         if (dbArticle != null) {
             artistBiography = dbArticle.markItAsLocal()
         } else {
-            artistBiography = getArticleFromService(artistName)
+            artistBiography = biographyExternalService.getArticleFromService(artistName)
             if (artistBiography.biography.isNotEmpty()) {
-                BiographyLocalStorage.insertArtistIntoDB(artistBiography)
+                biographyLocalStorage.insertArtistIntoDB(artistBiography)
             }
         }
         return artistBiography
     }
+    private fun Biography.ArtistBiography.markItAsLocal() = copy(biography = "[*]$biography")
 }
 
