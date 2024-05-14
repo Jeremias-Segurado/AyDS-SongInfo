@@ -10,32 +10,20 @@ import java.io.IOException
 interface externalBiographyRepository{
     fun getArticleFromService(artistName: String): Biography.ArtistBiography
 }
-internal class externalBiographyRepository_Imp(private val lastFMAPI: LastFMAPI): externalBiographyRepository{
+internal class externalBiographyRepository_Imp(
+    private val lastFMAPI: LastFMAPI,
+    private val ExternalServiceToArtistBiographyMap:externalServiceToArtistBiographyMap
+): externalBiographyRepository{
 
     override fun getArticleFromService(artistName: String): Biography.ArtistBiography {
         var artistBiography = Biography.ArtistBiography(artistName, "", "")
         try {
             val callResponse = getSongFromService(artistName)
-            artistBiography = getArtistBioFromExternalData(callResponse.body(), artistName)
+            artistBiography = ExternalServiceToArtistBiographyMap.mapServiceToBiography(callResponse.body(), artistName)
         } catch (e1: IOException) {
             e1.printStackTrace()
         }
         return artistBiography
-    }
-
-    private fun getArtistBioFromExternalData(
-        serviceData: String?,
-        artistName: String
-    ): Biography.ArtistBiography {
-        val gson = Gson()
-        val jobj = gson.fromJson(serviceData, JsonObject::class.java)
-        val artist = jobj["artist"].getAsJsonObject()
-        val bio = artist["bio"].getAsJsonObject()
-        val extract = bio["content"]
-        val url = artist["url"]
-        val text = extract?.asString ?: "No Results"
-
-        return Biography.ArtistBiography(artistName, text, url.asString)
     }
 
     private fun getSongFromService(artistName: String) =
