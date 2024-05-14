@@ -1,69 +1,33 @@
 package ayds.songinfo.moredetails.presentation
 
+import ayds.observer.Observable
+import ayds.observer.Subject
+import ayds.songinfo.moredetails.domain.Entity.ArtistBiography
+import ayds.songinfo.moredetails.domain.BiographyRepository
 
 interface moreDetailsPresenter{
-
+    val artistBiographyObservable: Observable<ArtistBiographyUiState>
+    fun getArtistInfo(artistName: String)
 }
 
-class moreDetailsPresenter_imp():moreDetailsPresenter {
+internal class moreDetailsPresenter_imp(
+    private val repository: BiographyRepository,
+    private val artistBiographyDescriptionHelper: BiographyDescriptionHELPER
+):moreDetailsPresenter {
+    override val artistBiographyObservable= Subject<ArtistBiographyUiState>()
 
-}
-private const val ARTICLE_BD_NAME = "database-article"
-private const val LASTFM_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
-private const val LASTFM_IMAGE_URL =
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
+    override fun getArtistInfo(artistName: String) {
+        val artistBiography = repository.getArtistInfoFromRepository(artistName)
+        val uiState = artistBiography.toUiState()
 
-private lateinit var articleTextView: TextView
-private lateinit var openUrlButton: Button
-private lateinit var lastFMImageView: ImageView
-
-private lateinit var articleDatabase: ArticleDatabase
-
-private lateinit var lastFMAPI: LastFMAPI
-
-override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_other_info)
-
-    initViewProperties()
-    initArticleDatabase()
-    initLastFMAPI()
-    getArtistInfoAsync()
-}
-
-private fun initViewProperties() {
-    articleTextView = findViewById(R.id.textPane1)
-    openUrlButton = findViewById(R.id.openUrlButton)
-    lastFMImageView = findViewById(R.id.lastFMImageView)
-}
-
-private fun initArticleDatabase() {
-    articleDatabase =
-        Room.databaseBuilder(this, ArticleDatabase::class.java, ARTICLE_BD_NAME).build()
-}
-
-private fun initLastFMAPI() {
-    val retrofit = Retrofit.Builder()
-        .baseUrl(LASTFM_BASE_URL)
-        .addConverterFactory(ScalarsConverterFactory.create())
-        .build()
-
-    lastFMAPI = retrofit.create(LastFMAPI::class.java)
-}
-
-private fun getArtistInfoAsync() {
-    Thread {
-        getArtistInfo()
-    }.start()
-}
-
-private fun getArtistInfo() {
-    val artistBiography = getArtistInfoFromRepository()
-    updateUi(artistBiography)
-}
-
-//Donde se meteria?? sirve siquiera???
-    companion object {
-        const val ARTIST_NAME_EXTRA = "artistName"
+        artistBiographyObservable.notify(uiState)
     }
+
+    private fun ArtistBiography.toUiState() = ArtistBiographyUiState(
+        artistName,
+        artistBiographyDescriptionHelper.getDescription(this),
+        articleUrl
+    )
+
+}
 

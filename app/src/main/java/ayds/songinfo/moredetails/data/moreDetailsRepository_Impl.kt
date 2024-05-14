@@ -3,17 +3,17 @@ package ayds.songinfo.moredetails.data
 import ayds.songinfo.moredetails.data.external.externalBiographyRepository
 import ayds.songinfo.moredetails.data.local.localBiographyRepository
 import ayds.songinfo.moredetails.domain.BiographyRepository
-import ayds.songinfo.moredetails.domain.Entity.Biography
+import ayds.songinfo.moredetails.domain.Entity.ArtistBiography
 
 internal class BiographyRepositoryImpl(
     private val biographyLocalStorage:  localBiographyRepository,
     private val biographyExternalService:externalBiographyRepository
 ) : BiographyRepository {
 
-    override fun getArtistInfoFromRepository(artistName: String): Biography {
+    override fun getArtistInfoFromRepository(artistName: String): ArtistBiography {
 
         val dbArticle = biographyLocalStorage.getArticleFromDB(artistName)
-        val artistBiography: Biography.ArtistBiography
+        val artistBiography: ArtistBiography
 
         if (dbArticle != null) {
             artistBiography = dbArticle.markItAsLocal()
@@ -25,6 +25,6 @@ internal class BiographyRepositoryImpl(
         }
         return artistBiography
     }
-    private fun Biography.ArtistBiography.markItAsLocal() = copy(biography = "[*]$biography")
+    private fun ArtistBiography.markItAsLocal() = copy(biography = "[*]$biography")
 }
 

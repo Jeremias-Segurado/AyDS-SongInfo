@@ -1,12 +1,12 @@
 package ayds.songinfo.moredetails.data.external
 
-import ayds.songinfo.moredetails.domain.Entity.Biography
+import ayds.songinfo.moredetails.domain.Entity.ArtistBiography
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 
 
 interface externalServiceToArtistBiographyMap{
-    fun mapServiceToBiography(serviceData: String?, artistName: String): Biography.ArtistBiography
+    fun mapServiceToBiography(serviceData: String?, artistName: String): ArtistBiography
 
 }
 
@@ -22,7 +22,7 @@ internal class externalServiceToArtistBiographyMap_implementacion: externalServi
     override fun mapServiceToBiography(
         serviceData: String?,
         artistName: String
-    ): Biography.ArtistBiography {
+    ): ArtistBiography {
         val gson = Gson()
         val jobj = gson.fromJson(serviceData, JsonObject::class.java)
         val artist = jobj[ARTIST].getAsJsonObject()
@@ -31,6 +31,6 @@ internal class externalServiceToArtistBiographyMap_implementacion: externalServi
         val url = artist[URL]
         val text = extract?.asString ?: NO_RESULTS
 
-        return Biography.ArtistBiography(artistName, text, url.asString)
+        return ArtistBiography(artistName, text, url.asString)
     }
 }
