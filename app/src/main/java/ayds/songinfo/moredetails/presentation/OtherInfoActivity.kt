@@ -8,19 +8,16 @@ import android.text.Html
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.text.HtmlCompat
 import ayds.songinfo.R
-import ayds.songinfo.moredetails.Dependency_Inyector.moreDetailsInyector
-import ayds.songinfo.moredetails.domain.Entity.ArtistBiography
+import ayds.songinfo.moredetails.injector.MoreDetailsInjector
 import com.squareup.picasso.Picasso
-import java.util.Locale
 
-class moreDetailsView : Activity(){
+class OtherInfoActivity : Activity() {
     private lateinit var articleTextView: TextView
     private lateinit var openUrlButton: Button
     private lateinit var lastFMImageView: ImageView
 
-    private lateinit var presenter: moreDetailsPresenter
+    private lateinit var presenter: MoreDetailsPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,10 +30,9 @@ class moreDetailsView : Activity(){
         getArtistInfoAsync()
     }
 
-    private fun getArtistInfoAsync() {
-        Thread {
-            presenter.getArtistInfo(getArtistName())
-        }.start()
+    private fun initPresenter() {
+        MoreDetailsInjector.initGraph(this)
+        presenter = MoreDetailsInjector.presenter
     }
 
     private fun observePresenter() {
@@ -51,14 +47,16 @@ class moreDetailsView : Activity(){
         lastFMImageView = findViewById(R.id.lastFMImageView)
     }
 
-    private fun initPresenter() {
-        moreDetailsInyector.initGraph(this)
-        presenter = moreDetailsInyector.presenter
+    private fun getArtistInfoAsync() {
+        Thread {
+            getArtistInfo()
+        }.start()
     }
 
-
-    private fun getArtistName() =
-        intent.getStringExtra(ARTIST_NAME_EXTRA) ?: throw Exception("Missing artist name")
+    private fun getArtistInfo() {
+        val artistName = getArtistName()
+        presenter.getArtistInfo(artistName)
+    }
 
     private fun updateUi(uiState: ArtistBiographyUiState) {
         runOnUiThread {
@@ -84,14 +82,16 @@ class moreDetailsView : Activity(){
         Picasso.get().load(url).into(lastFMImageView)
     }
 
+    private fun getArtistName() =
+        intent.getStringExtra(ARTIST_NAME_EXTRA) ?: throw Exception("Missing artist name")
+
     private fun updateArticleText(infoHtml: String) {
-        articleTextView.text = HtmlCompat.fromHtml(infoHtml, HtmlCompat.FROM_HTML_MODE_LEGACY);
+        articleTextView.text = Html.fromHtml(infoHtml)
     }
 
     companion object {
         const val ARTIST_NAME_EXTRA = "artistName"
     }
-
 }
 
 

@@ -1,7 +1,4 @@
-package ayds.songinfo.moredetails.domain.Entity
-
-import ayds.songinfo.home.model.entities.Song
-
+package ayds.songinfo.moredetails.domain
 
 data class ArtistBiography(
     val artistName: String,

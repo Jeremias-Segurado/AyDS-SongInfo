@@ -1,15 +1,12 @@
 package ayds.songinfo.moredetails.data.external
 
-import ayds.songinfo.moredetails.domain.Entity.ArtistBiography
+import ayds.songinfo.moredetails.domain.ArtistBiography
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 
-
-interface externalServiceToArtistBiographyMap{
+interface ServiceToArtistBiographyResolver {
     fun mapServiceToBiography(serviceData: String?, artistName: String): ArtistBiography
-
 }
-
 
 private const val ARTIST = "artist"
 private const val BIO = "bio"
@@ -17,8 +14,7 @@ private const val CONTENT = "content"
 private const val URL = "url"
 private const val NO_RESULTS = "No Results"
 
-
-internal class externalServiceToArtistBiographyMap_implementacion: externalServiceToArtistBiographyMap {
+internal class LastFMToArtistBiographyResolverImpl : ServiceToArtistBiographyResolver {
     override fun mapServiceToBiography(
         serviceData: String?,
         artistName: String

@@ -1,13 +1,13 @@
 package ayds.songinfo.moredetails.data.local
 
-import ayds.songinfo.moredetails.domain.Entity.ArtistBiography
+import ayds.songinfo.moredetails.domain.ArtistBiography
 
-interface localBiographyRepository{
+interface MoreDetailsLocalRespository {
     fun getArticleFromDB(artistName: String): ArtistBiography?
     fun insertArtistIntoDB(artistBiography: ArtistBiography)
 }
 
-class localRepository_Imp(val articleDatabase: ArticleDatabase):localBiographyRepository{
+internal class MoreDetailsLocalRepositoryImpl(private val articleDatabase: ArticleDatabase, ) : MoreDetailsLocalRespository {
 
     private val articleDao = articleDatabase.ArticleDao()
     override fun getArticleFromDB(artistName: String): ArtistBiography? {
