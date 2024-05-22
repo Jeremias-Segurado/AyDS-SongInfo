@@ -11,7 +11,7 @@ interface MoreDetailsPresenter {
 
 }
 
-internal class OtherInfoPresenterImpl(
+internal class MoreDetailsPresenterImpl(
     private val repository: OtherInfoRepository,
     private val artistBiographyDescriptionHelper: ArtistBiographyDescriptionHelper
 ) : MoreDetailsPresenter {

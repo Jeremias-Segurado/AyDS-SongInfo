@@ -10,7 +10,7 @@ import ayds.songinfo.moredetails.data.local.ArticleDatabase
 import ayds.songinfo.moredetails.data.local.MoreDetailsLocalRepositoryImpl
 import ayds.songinfo.moredetails.presentation.ArtistBiographyDescriptionHelperImpl
 import ayds.songinfo.moredetails.presentation.MoreDetailsPresenter
-import ayds.songinfo.moredetails.presentation.OtherInfoPresenterImpl
+import ayds.songinfo.moredetails.presentation.MoreDetailsPresenterImpl
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
@@ -41,6 +41,6 @@ object MoreDetailsInjector {
 
         val artistBiographyDescriptionHelper = ArtistBiographyDescriptionHelperImpl()
 
-        presenter = OtherInfoPresenterImpl(repository, artistBiographyDescriptionHelper)
+        presenter = MoreDetailsPresenterImpl(repository, artistBiographyDescriptionHelper)
     }
 }

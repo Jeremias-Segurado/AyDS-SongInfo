@@ -25,9 +25,9 @@ internal class MoreDetailsRepositoryImpl(
         }
         return artistBiography
     }
-   // LO QUE TENIA EL PROFE
-    //private fun ArtistBiography.markItAsLocal() {
-       // isLocallyStored = true
-   // }
-    private fun ArtistBiography.markItAsLocal() = copy(biography = "[*]$biography")
+
+    private fun ArtistBiography.markItAsLocal() {
+       isLocallyStored = true
+    }
+
 }
