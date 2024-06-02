@@ -1,33 +1,31 @@
 package ayds.songinfo.moredetails.data
 
-import ayds.songinfo.moredetails.data.external.OtherInfoService
+import ayds.songinfo.moredetails.data.broker.ArtistBiographyBroker
 import ayds.songinfo.moredetails.data.local.MoreDetailsLocalRespository
-import ayds.songinfo.moredetails.domain.ArtistBiography
+import ayds.songinfo.moredetails.domain.Card
+import ayds.songinfo.moredetails.domain.ExternalServices
 import ayds.songinfo.moredetails.domain.OtherInfoRepository
+import java.util.LinkedList
 
 internal class MoreDetailsRepositoryImpl(
     private val otherInfoLocalStorage: MoreDetailsLocalRespository,
-    private val otherInfoService: OtherInfoService,
+    private val otherInfoServiceBroker: ArtistBiographyBroker,
 ) : OtherInfoRepository {
 
-    override fun getArtistInfoFromRepository(artistName: String): ArtistBiography {
-        val dbArticle = otherInfoLocalStorage.getArticleFromDB(artistName)
+    override fun getArtistCardsFromRepository(artistName: String): LinkedList<Card> {
+        val dbArticleList = otherInfoLocalStorage.getArticleFromDB(artistName)
+        val artistCardList: LinkedList<Card>
 
-        val artistBiography: ArtistBiography
-
-        if (dbArticle != null) {
-            artistBiography = dbArticle.apply { markItAsLocal() }
-        } else {
-            artistBiography = otherInfoService.getArticle(artistName)
-            if (artistBiography.biography.isNotEmpty()) {
-                otherInfoLocalStorage.insertArtistIntoDB(artistBiography)
-            }
-        }
-        return artistBiography
+        if(dbArticleList.count() < ExternalServices.entries.count()){
+            artistCardList = otherInfoServiceBroker.getInfoArticlesFromServices(artistName)
+            if (artistCardList.isNotEmpty()) {
+                for (card in artistCardList)
+                    otherInfoLocalStorage.insertArtistIntoDB(card)
+           }
+        }else
+            artistCardList = dbArticleList
+        return artistCardList
     }
 
-    private fun ArtistBiography.markItAsLocal() {
-       isLocallyStored = true
-    }
 
 }

@@ -5,17 +5,26 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.ScrollView
 import android.widget.TextView
 import ayds.songinfo.R
 import ayds.songinfo.moredetails.injector.MoreDetailsInjector
 import com.squareup.picasso.Picasso
+import java.util.LinkedList
+
+private const val umlTextView_Filter_NAME = "artistInfo"
 
 class OtherInfoActivity : Activity() {
-    private lateinit var articleTextView: TextView
-    private lateinit var openUrlButton: Button
-    private lateinit var lastFMImageView: ImageView
+    //ToDo:: Revisar problema de aoutOfBounds en el hilo que se crea,
+    //Quiza sea problemas de actualizacion de listas.
+    //Quiza condicion de carrera (segun EL GAN FRAN)
+    private lateinit var urlButtonList: LinkedList<Button>
+    private lateinit var cardTextViewList: LinkedList<TextView>
+    private lateinit var logoImageViewList: LinkedList<ImageView>
+    private lateinit var sourceTextViewList: LinkedList<TextView>
 
     private lateinit var presenter: MoreDetailsPresenter
 
@@ -36,15 +45,34 @@ class OtherInfoActivity : Activity() {
     }
 
     private fun observePresenter() {
-        presenter.artistBiographyObservable.subscribe { artistBiography ->
+        presenter.artistCardsObservable.subscribe { artistBiography ->
             updateUi(artistBiography)
         }
     }
 
     private fun initViewProperties() {
-        articleTextView = findViewById(R.id.textPane1)
-        openUrlButton = findViewById(R.id.openUrlButton)
-        lastFMImageView = findViewById(R.id.lastFMImageView)
+        logoImageViewList = LinkedList<ImageView>()
+        urlButtonList = LinkedList<Button>()
+        cardTextViewList = LinkedList<TextView>()
+        sourceTextViewList = LinkedList<TextView>()
+
+        val scrollView = findViewById<ScrollView>(R.id.scrollView)
+        var scrollViewChild: View
+
+        for (i in 0..<scrollView.childCount){
+            scrollViewChild = scrollView.getChildAt(i)
+            when(scrollViewChild){
+                is ImageView -> logoImageViewList.addLast(scrollViewChild)
+                is Button -> urlButtonList.addLast(scrollViewChild)
+                is TextView ->{
+                    if (scrollViewChild.id.toString().contains(umlTextView_Filter_NAME))
+                        cardTextViewList.addLast(scrollViewChild)
+                    else
+                        sourceTextViewList.addLast(scrollViewChild)
+                }
+            }
+
+        }
     }
 
     private fun getArtistInfoAsync() {
@@ -58,16 +86,21 @@ class OtherInfoActivity : Activity() {
         presenter.getArtistInfo(artistName)
     }
 
-    private fun updateUi(uiState: ArtistBiographyUiState) {
+
+    private fun updateUi(uiState: ArtistCardsUIState) {
         runOnUiThread {
-            updateOpenUrlButton(uiState.articleUrl)
-            updateLastFMLogo(uiState.imageUrl)
-            updateArticleText(uiState.infoHtml)
+            for(i in 0..uiState.cards.count()){
+                updateOpenUrlButton(uiState.cards[i].articleUrl, i)
+                updateServiceLogo(uiState.cards[i].articleURLLogo, i)
+                updateArticleText(uiState.cards[i].biographyHTML, i)
+                updateSourceTextView(uiState.cards[i].source, i)
+            }
+
         }
     }
 
-    private fun updateOpenUrlButton(url: String) {
-        openUrlButton.setOnClickListener {
+    private fun updateOpenUrlButton(url: String, indexButton: Int) {
+        urlButtonList[indexButton].setOnClickListener {
             navigateToUrl(url)
         }
     }
@@ -78,15 +111,19 @@ class OtherInfoActivity : Activity() {
         startActivity(intent)
     }
 
-    private fun updateLastFMLogo(url: String) {
-        Picasso.get().load(url).into(lastFMImageView)
+    private fun updateServiceLogo(url: String, indexLogo: Int) {
+        Picasso.get().load(url).into(logoImageViewList[indexLogo])
     }
 
+    private fun updateSourceTextView(source: String, indexSource: Int){
+        sourceTextViewList[indexSource].text = source
+    }
     private fun getArtistName() =
         intent.getStringExtra(ARTIST_NAME_EXTRA) ?: throw Exception("Missing artist name")
 
-    private fun updateArticleText(infoHtml: String) {
-        articleTextView.text = Html.fromHtml(infoHtml)
+    //ToDo::CAmbiar func deprecated
+    private fun updateArticleText(infoHtml: String, indexCardText: Int) {
+        cardTextViewList[indexCardText].text = Html.fromHtml(infoHtml)
     }
 
     companion object {

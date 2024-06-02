@@ -1,26 +1,24 @@
 package ayds.songinfo.moredetails.presentation
 
-import ayds.songinfo.moredetails.domain.ArtistBiography
+import ayds.songinfo.moredetails.domain.Card
 import java.util.Locale
 
-interface ArtistBiographyDescriptionHelper {
-    fun getDescription(artistBiography: ArtistBiography): String
+interface ArtistCardDescriptionHelper {
+    fun getDescription(artistCard: Card): String
 }
 
 private const val HEADER = "<html><div width=400><font face=\"arial\">"
 private const val FOOTER = "</font></div></html>"
 
-internal class ArtistBiographyDescriptionHelperImpl : ArtistBiographyDescriptionHelper {
+internal class ArtistCardDescriptionHelperImpl : ArtistCardDescriptionHelper {
 
-    override fun getDescription(artistBiography: ArtistBiography): String {
-        val text = getTextBiography(artistBiography)
-        return textToHtml(text, artistBiography.artistName)
+    override fun getDescription(artistCard: Card): String {
+        val text = getTextBiography(artistCard)
+        return textToHtml(text, artistCard.artistName)
     }
 
-    private fun getTextBiography(artistBiography: ArtistBiography): String {
-        val prefix = if (artistBiography.isLocallyStored) "[*]" else ""
-        val text = artistBiography.biography.replace("\\n", "\n")
-        return "$prefix$text"
+    private fun getTextBiography(artistBiography: Card): String {
+        return artistBiography.biography.replace("\\n", "\n")
     }
 
     private fun textToHtml(text: String, term: String): String {
@@ -37,4 +35,6 @@ internal class ArtistBiographyDescriptionHelperImpl : ArtistBiographyDescription
         builder.append(FOOTER)
         return builder.toString()
     }
+
+    //ToDo:: Hacer una funcion que transforme el Enum.ExternalServices en un stringHTML
 }

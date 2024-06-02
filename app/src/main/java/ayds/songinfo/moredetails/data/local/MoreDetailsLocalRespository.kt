@@ -1,26 +1,39 @@
 package ayds.songinfo.moredetails.data.local
 
-import ayds.songinfo.moredetails.domain.ArtistBiography
+import ayds.songinfo.moredetails.domain.Card
+import java.util.LinkedList
 
 interface MoreDetailsLocalRespository {
-    fun getArticleFromDB(artistName: String): ArtistBiography?
-    fun insertArtistIntoDB(artistBiography: ArtistBiography)
+    fun getArticleFromDB(artistName: String): LinkedList<Card>
+    fun insertArtistIntoDB(artistBiography: Card)
 }
 
-internal class MoreDetailsLocalRepositoryImpl(private val articleDatabase: ArticleDatabase, ) : MoreDetailsLocalRespository {
+internal class MoreDetailsLocalRepositoryImpl(private val articleDatabase: ArticleDatabase) : MoreDetailsLocalRespository {
 
-    private val articleDao = articleDatabase.ArticleDao()
-    override fun getArticleFromDB(artistName: String): ArtistBiography? {
-        val artistEntity = articleDao.getArticleByArtistName(artistName)
-        return artistEntity?.let {
-            ArtistBiography(artistName, artistEntity.biography, artistEntity.articleUrl)
+    private val cardDao = articleDatabase.CardDao()
+    override fun getArticleFromDB(artistName: String): LinkedList<Card> {
+        val artistInfoList = cardDao.getArticleByArtistName(artistName)
+        val artistCardList = LinkedList<Card>()
+        for (cardEntity in artistInfoList) {
+            artistCardList.addLast(Card(
+                cardEntity.artistName,
+                cardEntity.biography,
+                cardEntity.articleUrl,
+                cardEntity.articleURLLogo,
+                cardEntity.source
+            ))
         }
+        return artistCardList
     }
 
-    override fun insertArtistIntoDB(artistBiography: ArtistBiography) {
-        articleDao.insertArticle(
-            ArticleEntity(
-                artistBiography.artistName, artistBiography.biography, artistBiography.articleUrl
+    override fun insertArtistIntoDB(artistBiography: Card) {
+        cardDao.insertArticle(
+            CardEntity(
+                artistBiography.artistName,
+                artistBiography.biography,
+                artistBiography.articleUrl,
+                artistBiography.articleURLLogo,
+                artistBiography.source
             )
         )
     }

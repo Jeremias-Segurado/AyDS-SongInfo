@@ -10,9 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -20,76 +22,95 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/lastFMImageView"
+                android:id="@+id/serviceLogoImgView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:paddingTop="24dp"/>
+                android:paddingTop="24dp" />
 
             <TextView
-                android:id="@+id/textPane1"
+                android:id="@+id/artistInfoTextView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:autoLink="web"
                 android:linksClickable="true"
                 android:padding="16dp" />
 
+            <TextView
+                android:id="@+id/sourceTextView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:linksClickable="true" />
+
             <Button
-                android:id="@+id/openUrlButton"
+                android:id="@+id/openUrlButton1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:text="View Full Article" />
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/serviceLogoImgView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:paddingTop="24dp"/>
+                android:paddingTop="24dp" />
 
             <TextView
-                android:id="@+id/textPane2"
+                android:id="@+id/artistInfoTextView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:autoLink="web"
                 android:linksClickable="true"
                 android:padding="16dp" />
+
+            <TextView
+                android:id="@+id/sourceTextView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:linksClickable="true" />
 
             <Button
                 android:id="@+id/openUrlButton2"
-                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:text="View Full Article" />
+                android:text="View Full Article"
+                android:visibility="gone" />
 
             <ImageView
-                android:id="@+id/imageView3"
+                android:id="@+id/serviceLogoImgView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:paddingTop="24dp"/>
+                android:paddingTop="24dp" />
 
             <TextView
-                android:id="@+id/textPane3"
+                android:id="@+id/artistInfoTextView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:autoLink="web"
                 android:linksClickable="true"
                 android:padding="16dp" />
 
+            <TextView
+                android:id="@+id/sourceTextView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:linksClickable="true" />
+
             <Button
                 android:id="@+id/openUrlButton3"
-                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:text="View Full Article" />
+                android:text="View Full Article"
+                android:visibility="gone" />
 
         </LinearLayout>
-
-
 
 
     </ScrollView>

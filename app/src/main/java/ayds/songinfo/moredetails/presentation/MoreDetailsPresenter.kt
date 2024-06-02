@@ -2,33 +2,41 @@ package ayds.songinfo.moredetails.presentation
 
 import ayds.observer.Observable
 import ayds.observer.Subject
-import ayds.songinfo.moredetails.domain.ArtistBiography
+import ayds.songinfo.moredetails.domain.Card
 import ayds.songinfo.moredetails.domain.OtherInfoRepository
+import java.util.LinkedList
 
 interface MoreDetailsPresenter {
-    val artistBiographyObservable: Observable<ArtistBiographyUiState>
+    val artistCardsObservable: Observable<ArtistCardsUIState>
     fun getArtistInfo(artistName: String)
-
 }
 
 internal class MoreDetailsPresenterImpl(
     private val repository: OtherInfoRepository,
-    private val artistBiographyDescriptionHelper: ArtistBiographyDescriptionHelper
+    private val artistCardDescriptionHelper: ArtistCardDescriptionHelper
 ) : MoreDetailsPresenter {
 
-    override val artistBiographyObservable = Subject<ArtistBiographyUiState>()
+    override val artistCardsObservable = Subject<ArtistCardsUIState>()
 
     override fun getArtistInfo(artistName: String) {
-        val artistBiography = repository.getArtistInfoFromRepository(artistName)
-
+        val artistBiography = repository.getArtistCardsFromRepository(artistName)
         val uiState = artistBiography.toUiState()
 
-        artistBiographyObservable.notify(uiState)
+        artistCardsObservable.notify(uiState)
     }
 
-    private fun ArtistBiography.toUiState() = ArtistBiographyUiState(
-        artistName,
-        artistBiographyDescriptionHelper.getDescription(this),
-        articleUrl
-    )
+    private fun LinkedList<Card>.toUiState(): ArtistCardsUIState {
+        val artistCardsUIStateReturn = ArtistCardsUIState(LinkedList<CardInfo>())
+        for (card in this){
+            artistCardsUIStateReturn.cards.addLast(
+                CardInfo(
+                    card.artistName,
+                    artistCardDescriptionHelper.getDescription(card),
+                    card.articleURLLogo,
+                    card.articleURLLogo,
+                    card.source.toString() ))
+        }
+        return artistCardsUIStateReturn
+    }
+
 }

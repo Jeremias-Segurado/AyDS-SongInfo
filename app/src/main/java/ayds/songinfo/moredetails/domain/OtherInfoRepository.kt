@@ -1,6 +1,8 @@
 package ayds.songinfo.moredetails.domain
 
+import java.util.LinkedList
+
 
 interface OtherInfoRepository {
-    fun getArtistInfoFromRepository(artistName: String): ArtistBiography
+    fun getArtistCardsFromRepository(artistName: String): LinkedList<Card>
 }
