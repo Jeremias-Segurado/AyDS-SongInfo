@@ -78,7 +78,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:text="View Full Article"
-                android:visibility="gone" />
+                android:visibility="gone"
+                />
 
             <ImageView
                 android:id="@+id/serviceLogoImgView3"
@@ -108,7 +109,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:text="View Full Article"
-                android:visibility="gone" />
+                android:visibility="gone"
+                 />
 
         </LinearLayout>
 

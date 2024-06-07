@@ -32,7 +32,7 @@ internal class MoreDetailsPresenterImpl(
                 CardInfo(
                     card.artistName,
                     artistCardDescriptionHelper.getDescription(card),
-                    card.articleURLLogo,
+                    card.articleUrl,
                     card.articleURLLogo,
                     card.source.toString() ))
         }
